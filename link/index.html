@@ -20,6 +20,7 @@
   @media(min-width:640px){dialog{margin:auto;border-radius:22px}}
   @keyframes sheet{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
   dialog[open]{animation:sheet .22s ease-out}
+  .strip{scrollbar-width:thin;scrollbar-color:#B9C3B7 transparent;scroll-padding-inline:1rem;-webkit-overflow-scrolling:touch}
   #toast{transition:opacity .2s,transform .2s}
   @media(prefers-reduced-motion:reduce){dialog[open]{animation:none}#toast{transition:none}}
 </style>
@@ -38,10 +39,10 @@
     </button>
   </header>
 
-  <main class="mt-6 sm:mt-8 grid gap-5 lg:grid-cols-[400px_minmax(0,1fr)] lg:gap-8 items-start">
+  <main class="mt-6 sm:mt-8 grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[400px_minmax(0,1fr)] lg:gap-8 items-start">
 
     <!-- Kiri: input + pratinjau -->
-    <section class="space-y-4 lg:sticky lg:top-6">
+    <section class="min-w-0 space-y-4 lg:sticky lg:top-6">
       <div class="rounded-2xl bg-white border border-[color:var(--line)] p-4 sm:p-5">
         <label for="names" class="block font-semibold">Nama tamu</label>
         <p id="hint" class="mt-0.5 text-sm text-[color:var(--muted)]">Satu nama per baris. Gelar boleh ditulis lengkap.</p>
@@ -50,15 +51,8 @@
       </div>
 
       <figure>
-        <div class="relative overflow-hidden rounded-2xl p-5 sm:p-6 text-[#fff3b0]" style="background:linear-gradient(160deg,#343a33,#141813)">
-          <div class="pointer-events-none absolute inset-2 rounded-xl border border-[#fff3b0]/35"></div>
-          <p class="f-cin text-center text-[9px] sm:text-[10px] tracking-[.22em] leading-[1.9] opacity-90">GEREJA PROTESTAN MALUKU<br>JEMAAT GPM NAFAR</p>
-          <p class="f-cin mt-6 text-xl sm:text-2xl tracking-[.3em]">UNDANGAN</p>
-          <p class="f-serif italic font-semibold text-[17px] sm:text-lg leading-tight mt-1">Penthabisan dan Peresmian Pastori Baru</p>
-          <p class="f-serif font-bold text-[15px] mt-5 leading-snug">Kepada Yth.<br>Bapak/Ibu/Saudara/i :</p>
-          <div id="pvName" class="f-serif mt-2 inline-block max-w-full break-words border border-[#d9c45e] bg-[#fffdf3] px-3 py-1.5 text-xl font-bold text-[#2a2108]" style="overflow-wrap:anywhere">Nama tamu</div>
-        </div>
-        <figcaption class="mt-2 text-sm text-[color:var(--muted)]">Begini nama tampil di cover undangan.</figcaption>
+        <div id="pvStrip" class="strip -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0" tabindex="0" aria-label="Pratinjau cover untuk setiap tamu"></div>
+        <figcaption id="pvCap" class="mt-1 text-sm text-[color:var(--muted)]">Begini nama tampil di cover undangan.</figcaption>
       </figure>
     </section>
 
@@ -182,6 +176,33 @@ function btn(html, label, cls, fn){
   b.onclick = fn; return b;
 }
 
+
+function coverEl(name, i, total, dim){
+  const d = document.createElement('div');
+  d.className = 'relative snap-center shrink-0 overflow-hidden rounded-2xl p-5 sm:p-6 text-[#fff3b0] ' + (total > 1 ? 'w-[86%]' : 'w-full');
+  d.style.background = 'linear-gradient(160deg,#343a33,#141813)';
+  d.innerHTML =
+    '<div class="pointer-events-none absolute inset-2 rounded-xl border border-[#fff3b0]/35"></div>' +
+    (total > 1 ? '<span class="absolute right-4 top-3.5 text-[11px] font-semibold text-[#fff3b0]/70">'+(i+1)+' / '+total+'</span>' : '') +
+    '<p class="f-cin text-center text-[9px] sm:text-[10px] tracking-[.22em] leading-[1.9] opacity-90">GEREJA PROTESTAN MALUKU<br>JEMAAT GPM NAFAR</p>' +
+    '<p class="f-cin mt-6 text-xl sm:text-2xl tracking-[.3em]">UNDANGAN</p>' +
+    '<p class="f-serif italic font-semibold text-[17px] sm:text-lg leading-tight mt-1">Penthabisan dan Peresmian Pastori Baru</p>' +
+    '<p class="f-serif font-bold text-[15px] mt-5 leading-snug">Kepada Yth.<br>Bapak/Ibu/Saudara/i :</p>' +
+    '<div class="nm f-serif mt-2 inline-block max-w-full break-words border border-[#d9c45e] bg-[#fffdf3] px-3 py-1.5 text-xl font-bold text-[#2a2108]" style="overflow-wrap:anywhere"></div>';
+  const nm = d.querySelector('.nm'); nm.textContent = name; if (dim) nm.style.opacity = '.55';
+  return d;
+}
+function buildStrip(names){
+  const strip = $('#pvStrip'), keep = strip.scrollLeft;
+  strip.textContent = '';
+  if (!names.length) strip.appendChild(coverEl('Nama tamu', 0, 1, true));
+  else names.forEach((n, i) => strip.appendChild(coverEl(n.slice(0, MAXNAME), i, names.length, false)));
+  strip.scrollLeft = keep;
+  $('#pvCap').textContent = names.length > 1
+    ? names.length + ' cover, satu untuk setiap tamu. Geser ke samping untuk melihat semuanya.'
+    : 'Begini nama tampil di cover undangan.';
+}
+
 function render(){
   const names = parseNames();
   const base = $('#base').value.trim();
@@ -196,10 +217,8 @@ function render(){
   if (long) extra.push(long + ' nama lebih dari ' + MAXNAME + ' huruf, akan dipotong di cover');
   $('#hint').textContent = extra.length ? extra.join('. ') + '.' : 'Satu nama per baris. Gelar boleh ditulis lengkap.';
 
-  // pratinjau
-  const pv = $('#pvName');
-  pv.textContent = names[0] ? names[0].slice(0, MAXNAME) : 'Nama tamu';
-  pv.style.opacity = names[0] ? '1' : '.55';
+  // pratinjau: satu cover untuk setiap nama
+  buildStrip(names);
 
   // status
   $('#warnBase').classList.toggle('hidden', okBase);
