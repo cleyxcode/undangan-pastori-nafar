@@ -2,146 +2,283 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
-<title>Pembuat Link Undangan - GPM Nafar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#EDF0EA">
+<title>Link undangan tamu - Jemaat GPM Nafar</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-  button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #b8941f;outline-offset:2px}
+  :root{--ink:#16231B;--muted:#5B6B60;--line:#D5DCD3;--gold:#B8941F;--wa:#128C4A}
+  body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:#EDF0EA;color:var(--ink)}
+  .f-serif{font-family:'Cormorant Garamond',Georgia,serif}
+  .f-cin{font-family:'Cinzel',Georgia,serif}
+  button,input,textarea{font:inherit}
+  button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  dialog{border:0;padding:0;width:100%;max-width:34rem;background:#fff;color:var(--ink);margin:auto auto 0;border-radius:22px 22px 0 0;max-height:90vh;max-height:90dvh;overflow:auto}
+  dialog::backdrop{background:rgba(10,20,14,.55)}
+  @media(min-width:640px){dialog{margin:auto;border-radius:22px}}
+  @keyframes sheet{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+  dialog[open]{animation:sheet .22s ease-out}
+  #toast{transition:opacity .2s,transform .2s}
+  @media(prefers-reduced-motion:reduce){dialog[open]{animation:none}#toast{transition:none}}
 </style>
 </head>
-<body class="bg-stone-100 text-stone-900 min-h-screen">
-<div class="max-w-3xl mx-auto px-4 py-6 sm:py-10 space-y-5">
+<body class="antialiased">
+<div class="mx-auto max-w-5xl px-4 sm:px-6 pt-5 sm:pt-10" style="padding-bottom:calc(6rem + env(safe-area-inset-bottom))">
 
-  <header>
-    <h1 class="text-2xl sm:text-3xl font-bold text-[#4a3b0c]">Pembuat Link Undangan</h1>
-    <p class="mt-1 text-sm sm:text-base text-stone-600">Tulis nama tamu, lalu sistem membuat link khusus untuk masing-masing. Saat link dibuka, nama tamu otomatis tampil di cover undangan. Tidak memakai database.</p>
+  <header class="flex items-start justify-between gap-3">
+    <div class="min-w-0">
+      <h1 class="f-serif text-[34px] sm:text-5xl leading-[1.05] font-bold">Link undangan tamu</h1>
+      <p class="mt-2 max-w-md text-[15px] leading-relaxed text-[color:var(--muted)]">Tulis nama tamu, lalu kirim link khususnya lewat WhatsApp. Nama tamu akan tampil di cover undangan.</p>
+    </div>
+    <button id="btnSet" type="button" class="shrink-0 inline-flex items-center gap-2 rounded-full border border-[color:var(--line)] bg-white px-3.5 h-11 text-sm font-semibold hover:bg-stone-50 active:scale-[.97] transition" aria-haspopup="dialog">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      <span>Pengaturan</span>
+    </button>
   </header>
 
-  <section class="bg-white rounded-xl shadow-sm border border-stone-200 p-4 sm:p-5">
-    <label for="base" class="block font-semibold">1. Alamat web undangan</label>
-    <p class="text-sm text-stone-500 mt-0.5">Alamat file undangan setelah di-upload ke hosting (sudah terisi alamat undangan Anda; ubah kalau alamatnya berbeda).</p>
-    <input id="base" type="url" inputmode="url" autocomplete="off" placeholder="https://undangan-pastori-nafar.vercel.app/" class="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm sm:text-base">
-  </section>
+  <main class="mt-6 sm:mt-8 grid gap-5 lg:grid-cols-[400px_minmax(0,1fr)] lg:gap-8 items-start">
 
-  <section class="bg-white rounded-xl shadow-sm border border-stone-200 p-4 sm:p-5">
-    <label for="names" class="block font-semibold">2. Daftar nama tamu</label>
-    <p class="text-sm text-stone-500 mt-0.5">Satu nama per baris, boleh lengkap dengan gelar.</p>
-    <textarea id="names" rows="6" placeholder="Bpk. Benhur George Watubun, S.T&#10;Ibu Maria Rumahlewang&#10;Keluarga Gandakary" class="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm sm:text-base"></textarea>
-    <div class="mt-3 flex flex-wrap gap-2">
-      <button id="btnBuat" class="bg-[#4a3b0c] text-white font-semibold rounded-lg px-5 py-2.5 hover:bg-black active:scale-[.98] transition">Buat Link</button>
-      <button id="btnKosong" class="border border-stone-300 rounded-lg px-4 py-2.5 hover:bg-stone-50">Kosongkan</button>
-    </div>
-    <p id="msg" class="mt-2 text-sm text-red-600" role="alert"></p>
-  </section>
-
-  <details class="bg-white rounded-xl shadow-sm border border-stone-200 p-4 sm:p-5">
-    <summary class="font-semibold cursor-pointer">Isi pesan WhatsApp (bisa diubah)</summary>
-    <p class="text-sm text-stone-500 mt-2">Tulisan <b>{nama}</b> dan <b>{link}</b> akan diganti otomatis.</p>
-    <textarea id="tpl" rows="9" class="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm"></textarea>
-    <button id="btnTplReset" class="mt-2 text-sm underline text-stone-600">Kembalikan pesan awal</button>
-  </details>
-
-  <section id="hasil" class="hidden space-y-3">
-    <div class="flex flex-wrap items-center justify-between gap-2">
-      <h2 class="font-semibold text-lg">Hasil (<span id="jml">0</span> link)</h2>
-      <div class="flex flex-wrap gap-2">
-        <button id="btnSalinSemua" class="border border-stone-300 bg-white rounded-lg px-3 py-2 text-sm hover:bg-stone-50">Salin semua</button>
-        <button id="btnCsv" class="border border-stone-300 bg-white rounded-lg px-3 py-2 text-sm hover:bg-stone-50">Unduh CSV</button>
+    <!-- Kiri: input + pratinjau -->
+    <section class="space-y-4 lg:sticky lg:top-6">
+      <div class="rounded-2xl bg-white border border-[color:var(--line)] p-4 sm:p-5">
+        <label for="names" class="block font-semibold">Nama tamu</label>
+        <p id="hint" class="mt-0.5 text-sm text-[color:var(--muted)]">Satu nama per baris. Gelar boleh ditulis lengkap.</p>
+        <textarea id="names" rows="6" spellcheck="false" autocapitalize="words" placeholder="Bpk. Benhur George Watubun, S.T&#10;Ibu Maria Rumahlewang&#10;Keluarga Gandakary" class="mt-3 w-full resize-y rounded-xl border border-[color:var(--line)] bg-[#FAFBF9] px-3.5 py-3 text-base leading-relaxed placeholder:text-stone-400"></textarea>
+        <p id="count" class="mt-2 text-sm font-semibold" aria-live="polite">0 tamu</p>
       </div>
-    </div>
-    <ul id="daftar" class="space-y-3"></ul>
-  </section>
 
-  <p class="text-xs text-stone-500 pt-2">Daftar nama hanya tersimpan di perangkat ini dan tidak dikirim ke mana pun.</p>
+      <figure>
+        <div class="relative overflow-hidden rounded-2xl p-5 sm:p-6 text-[#fff3b0]" style="background:linear-gradient(160deg,#343a33,#141813)">
+          <div class="pointer-events-none absolute inset-2 rounded-xl border border-[#fff3b0]/35"></div>
+          <p class="f-cin text-center text-[9px] sm:text-[10px] tracking-[.22em] leading-[1.9] opacity-90">GEREJA PROTESTAN MALUKU<br>JEMAAT GPM NAFAR</p>
+          <p class="f-cin mt-6 text-xl sm:text-2xl tracking-[.3em]">UNDANGAN</p>
+          <p class="f-serif italic font-semibold text-[17px] sm:text-lg leading-tight mt-1">Penthabisan dan Peresmian Pastori Baru</p>
+          <p class="f-serif font-bold text-[15px] mt-5 leading-snug">Kepada Yth.<br>Bapak/Ibu/Saudara/i :</p>
+          <div id="pvName" class="f-serif mt-2 inline-block max-w-full break-words border border-[#d9c45e] bg-[#fffdf3] px-3 py-1.5 text-xl font-bold text-[#2a2108]" style="overflow-wrap:anywhere">Nama tamu</div>
+        </div>
+        <figcaption class="mt-2 text-sm text-[color:var(--muted)]">Begini nama tampil di cover undangan.</figcaption>
+      </figure>
+    </section>
+
+    <!-- Kanan: hasil -->
+    <section aria-labelledby="hasilJudul" class="min-w-0">
+      <div class="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
+        <div>
+          <h2 id="hasilJudul" class="f-serif text-[26px] sm:text-3xl font-bold leading-none">Link siap kirim</h2>
+          <p id="progTxt" class="mt-1.5 text-sm text-[color:var(--muted)]"></p>
+        </div>
+        <div id="bulk" class="hidden flex gap-2">
+          <button id="btnSalinSemua" type="button" class="h-10 rounded-full border border-[color:var(--line)] bg-white px-4 text-sm font-semibold hover:bg-stone-50 active:scale-[.97] transition">Salin semua</button>
+          <button id="btnCsv" type="button" class="h-10 rounded-full border border-[color:var(--line)] bg-white px-4 text-sm font-semibold hover:bg-stone-50 active:scale-[.97] transition">Unduh CSV</button>
+        </div>
+      </div>
+      <div id="bar" class="mt-3 hidden h-1.5 w-full overflow-hidden rounded-full bg-[#D5DCD3]"><div id="barIn" class="h-full rounded-full bg-[color:var(--wa)]" style="width:0%"></div></div>
+
+      <div id="warnBase" class="hidden mt-4 rounded-xl border border-amber-300 bg-amber-50 p-3.5 text-sm text-amber-900">
+        Alamat undangan belum benar. <button type="button" id="openSet2" class="font-semibold underline">Buka Pengaturan</button> dan isi alamat yang diawali https://
+      </div>
+
+      <div id="empty" class="mt-4 rounded-2xl border border-dashed border-[#B9C3B7] p-6 sm:p-8 text-center text-[15px] text-[color:var(--muted)]">
+        Belum ada nama. Ketik nama tamu di kolom <b>Nama tamu</b>, linknya langsung muncul di sini.
+      </div>
+      <ul id="daftar" class="mt-4 space-y-3"></ul>
+    </section>
+  </main>
 </div>
+
+<!-- Pengaturan -->
+<dialog id="dlg" aria-labelledby="dlgJudul">
+  <div class="p-5 sm:p-6" style="padding-bottom:calc(1.25rem + env(safe-area-inset-bottom))">
+    <div class="flex items-center justify-between gap-3">
+      <h2 id="dlgJudul" class="f-serif text-2xl font-bold">Pengaturan</h2>
+      <button id="dlgX" type="button" class="h-10 w-10 rounded-full border border-[color:var(--line)] text-xl leading-none hover:bg-stone-50" aria-label="Tutup">&times;</button>
+    </div>
+
+    <label for="base" class="mt-5 block font-semibold">Alamat undangan</label>
+    <p class="text-sm text-[color:var(--muted)]">Alamat web undangan yang sudah online.</p>
+    <input id="base" type="url" inputmode="url" autocomplete="off" class="mt-2 h-12 w-full rounded-xl border border-[color:var(--line)] bg-[#FAFBF9] px-3.5 text-base">
+
+    <label for="tpl" class="mt-5 block font-semibold">Pesan WhatsApp</label>
+    <p class="text-sm text-[color:var(--muted)]">Tulisan <b>{nama}</b> dan <b>{link}</b> diganti otomatis untuk setiap tamu.</p>
+    <textarea id="tpl" rows="9" class="mt-2 w-full rounded-xl border border-[color:var(--line)] bg-[#FAFBF9] px-3.5 py-3 text-[15px] leading-relaxed"></textarea>
+    <button id="btnTplReset" type="button" class="mt-1 h-10 text-sm font-semibold text-[color:var(--muted)] underline">Kembalikan pesan awal</button>
+
+    <div class="mt-4 grid gap-2 sm:grid-cols-2">
+      <button id="btnClearSent" type="button" class="h-11 rounded-xl border border-[color:var(--line)] text-sm font-semibold hover:bg-stone-50">Hapus tanda terkirim</button>
+      <button id="btnClearNames" type="button" class="h-11 rounded-xl border border-red-200 text-sm font-semibold text-red-700 hover:bg-red-50">Hapus semua nama</button>
+    </div>
+    <p class="mt-3 text-xs text-[color:var(--muted)]">Semua data hanya tersimpan di perangkat ini dan tidak dikirim ke mana pun.</p>
+
+    <button id="dlgDone" type="button" class="mt-5 h-12 w-full rounded-xl bg-[color:var(--ink)] text-base font-semibold text-white hover:bg-black active:scale-[.99] transition">Selesai</button>
+  </div>
+</dialog>
+
+<div id="toast" role="status" aria-live="polite" class="pointer-events-none fixed left-1/2 z-50 -translate-x-1/2 translate-y-2 rounded-full bg-[color:var(--ink)] px-4 py-2.5 text-sm font-semibold text-white opacity-0 shadow-lg" style="bottom:calc(1.25rem + env(safe-area-inset-bottom))"></div>
 
 <script>
 const $ = s => document.querySelector(s);
+const K = {base:'gpm_base', names:'gpm_names', tpl:'gpm_tpl', sent:'gpm_sent'};
+const DEF_BASE = 'https://undangan-pastori-nafar.vercel.app/';
 const DEF_TPL = "Salam sejahtera,\n\nKepada Yth. {nama}\n\nDengan sukacita kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri Penthabisan dan Peresmian Pastori Baru Jemaat GPM Nafar pada hari Minggu, 15 November 2026.\n\nBuka undangan digital di sini:\n{link}\n\nAtas kehadirannya kami sampaikan terima kasih dan teriring doa Tuhan Yesus memberkati.";
-const K = {base:'gpm_base', names:'gpm_names', tpl:'gpm_tpl'};
+const MAXNAME = 90;
 const load = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
 const save = (k,v) => { try { localStorage.setItem(k,v); } catch(e){} };
 
-let rows = []; // {nama, link}
+let sent;
+try { sent = new Set(JSON.parse(load(K.sent) || '[]')); } catch(e){ sent = new Set(); }
+const saveSent = () => save(K.sent, JSON.stringify([...sent]));
 
-// nilai awal
-(function init(){
-  const DEF_BASE = 'https://undangan-pastori-nafar.vercel.app/';
-  $('#base').value = load(K.base) || DEF_BASE;
-  $('#names').value = load(K.names) || '';
-  $('#tpl').value = load(K.tpl) || DEF_TPL;
-})();
+let rows = [];
+let skipped = 0;
 
-function makeLink(base, nama){
-  const sep = base.includes('?') ? '&' : '?';
-  return base + sep + 'to=' + encodeURIComponent(nama);
+function parseNames(){
+  const seen = new Set(), out = []; skipped = 0;
+  $('#names').value.split(/\r?\n/).forEach(l => {
+    const n = l.replace(/\s+/g,' ').trim(); if (!n) return;
+    const k = n.toLowerCase();
+    if (seen.has(k)) { skipped++; return; }
+    seen.add(k); out.push(n);
+  });
+  return out;
 }
-function waText(nama, link){
-  return $('#tpl').value.split('{nama}').join(nama).split('{link}').join(link);
+const validBase = b => /^https?:\/\/[^\s]+$/i.test(b);
+function makeLink(base, nama){
+  const b = base.split('#')[0];
+  return b + (b.includes('?') ? '&' : '?') + 'to=' + encodeURIComponent(nama);
+}
+const waText = (nama, link) => $('#tpl').value.split('{nama}').join(nama).split('{link}').join(link);
+
+let toastT;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg;
+  t.style.opacity = '1'; t.style.transform = 'translate(-50%,0)';
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>{ t.style.opacity = '0'; t.style.transform = 'translate(-50%,8px)'; }, 1800);
 }
 async function salin(text){
   try { await navigator.clipboard.writeText(text); return true; }
   catch(e){
-    const t = document.createElement('textarea'); t.value = text; t.style.position='fixed'; t.style.opacity='0';
-    document.body.appendChild(t); t.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(_){} t.remove(); return ok;
+    const t = document.createElement('textarea'); t.value = text; t.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(t); t.select(); let ok = false;
+    try { ok = document.execCommand('copy'); } catch(_){}
+    t.remove(); return ok;
   }
 }
-function flash(btn, txt){
-  const old = btn.dataset.old || btn.textContent; btn.dataset.old = old;
-  btn.textContent = txt; setTimeout(()=>{ btn.textContent = old; }, 1400);
+
+const ICON = {
+  wa:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>',
+  copy:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+  eye:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  ok:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>'
+};
+
+function btn(html, label, cls, fn){
+  const b = document.createElement('button'); b.type = 'button';
+  b.className = 'inline-flex h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold active:scale-[.97] transition ' + cls;
+  b.innerHTML = html + (label ? '<span>'+label+'</span>' : '');
+  if (label === null) b.classList.add('w-11','!px-0');
+  b.onclick = fn; return b;
 }
 
 function render(){
+  const names = parseNames();
+  const base = $('#base').value.trim();
+  const okBase = validBase(base);
+  rows = okBase ? names.map(n => ({nama:n, key:n.toLowerCase(), link:makeLink(base, n)})) : [];
+
+  // hitung & petunjuk
+  $('#count').textContent = names.length + ' tamu';
+  const extra = [];
+  if (skipped) extra.push(skipped + ' nama ganda dilewati');
+  const long = names.filter(n => n.length > MAXNAME).length;
+  if (long) extra.push(long + ' nama lebih dari ' + MAXNAME + ' huruf, akan dipotong di cover');
+  $('#hint').textContent = extra.length ? extra.join('. ') + '.' : 'Satu nama per baris. Gelar boleh ditulis lengkap.';
+
+  // pratinjau
+  const pv = $('#pvName');
+  pv.textContent = names[0] ? names[0].slice(0, MAXNAME) : 'Nama tamu';
+  pv.style.opacity = names[0] ? '1' : '.55';
+
+  // status
+  $('#warnBase').classList.toggle('hidden', okBase);
+  $('#empty').classList.toggle('hidden', names.length > 0);
+  $('#bulk').classList.toggle('hidden', rows.length === 0);
+  $('#bulk').classList.toggle('flex', rows.length > 0);
+  $('#bar').classList.toggle('hidden', rows.length === 0);
+
+  const done = rows.filter(r => sent.has(r.key)).length;
+  $('#progTxt').textContent = rows.length ? (done + ' dari ' + rows.length + ' sudah dikirim') : '';
+  $('#barIn').style.width = rows.length ? Math.round(done / rows.length * 100) + '%' : '0%';
+
   const ul = $('#daftar'); ul.textContent = '';
-  rows.forEach((r,i)=>{
+  rows.forEach((r, i) => {
+    const isSent = sent.has(r.key);
     const li = document.createElement('li');
-    li.className = 'bg-white rounded-xl shadow-sm border border-stone-200 p-3 sm:p-4';
-    const nm = document.createElement('p'); nm.className='font-semibold break-words'; nm.textContent = (i+1)+'. '+r.nama;
-    const inp = document.createElement('input'); inp.readOnly = true; inp.value = r.link;
-    inp.className = 'mt-2 w-full rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-xs sm:text-sm text-stone-600';
-    inp.addEventListener('focus', ()=>inp.select());
-    const bar = document.createElement('div'); bar.className = 'mt-2 flex flex-wrap gap-2';
-    const mk = (txt, cls) => { const b = document.createElement('button'); b.textContent = txt; b.className = 'rounded-lg px-3 py-2 text-sm '+cls; return b; };
-    const bSalin = mk('Salin link','border border-stone-300 hover:bg-stone-50');
-    bSalin.onclick = async ()=>{ flash(bSalin, (await salin(r.link)) ? 'Tersalin ✓' : 'Gagal'); };
-    const bWa = mk('Kirim WhatsApp','bg-green-600 text-white font-semibold hover:bg-green-700');
-    bWa.onclick = ()=>window.open('https://wa.me/?text='+encodeURIComponent(waText(r.nama, r.link)), '_blank', 'noopener');
-    const bLihat = mk('Lihat','border border-stone-300 hover:bg-stone-50');
-    bLihat.onclick = ()=>window.open(r.link, '_blank', 'noopener');
-    bar.append(bSalin, bWa, bLihat);
-    li.append(nm, inp, bar); ul.appendChild(li);
+    li.className = 'rounded-2xl border p-3.5 sm:p-4 ' + (isSent ? 'border-[#BFD6C6] bg-[#F3F8F4]' : 'border-[color:var(--line)] bg-white');
+
+    const info = document.createElement('div'); info.className = 'min-w-0';
+    const top = document.createElement('div'); top.className = 'flex items-start justify-between gap-2';
+    const nm = document.createElement('p'); nm.className = 'min-w-0 break-words font-semibold leading-snug text-[16px]'; nm.textContent = r.nama;
+    top.appendChild(nm);
+    if (isSent) {
+      const badge = document.createElement('button'); badge.type = 'button';
+      badge.className = 'inline-flex h-7 shrink-0 items-center gap-1 rounded-full bg-[#DDEDE2] px-2.5 text-xs font-semibold text-[#0E6B38]';
+      badge.innerHTML = ICON.ok + '<span>Terkirim</span>'; badge.title = 'Ketuk untuk membatalkan tanda terkirim';
+      badge.onclick = () => { sent.delete(r.key); saveSent(); render(); };
+      top.appendChild(badge);
+    }
+    const lk = document.createElement('p'); lk.className = 'mt-1 truncate text-xs text-[color:var(--muted)]'; lk.textContent = r.link;
+    info.append(top, lk);
+
+    const act = document.createElement('div'); act.className = 'mt-3 flex gap-2';
+    const bWa = btn(ICON.wa, isSent ? 'Kirim lagi' : 'Kirim WhatsApp', isSent ? 'flex-1 border border-[#128C4A] text-[#0E6B38] bg-white hover:bg-[#F3F8F4]' : 'flex-1 bg-[color:var(--wa)] text-white hover:bg-[#0E7A3F]', () => {
+      window.open('https://wa.me/?text=' + encodeURIComponent(waText(r.nama, r.link)), '_blank', 'noopener');
+      if (!sent.has(r.key)) { sent.add(r.key); saveSent(); setTimeout(render, 400); }
+    });
+    const bCopy = btn(ICON.copy, 'Salin', 'border border-[color:var(--line)] bg-white hover:bg-stone-50', async () => {
+      toast((await salin(r.link)) ? 'Link disalin' : 'Gagal menyalin, tekan lama pada link');
+    });
+    const bView = btn(ICON.eye, null, 'border border-[color:var(--line)] bg-white hover:bg-stone-50', () => window.open(r.link, '_blank', 'noopener'));
+    bView.setAttribute('aria-label', 'Lihat undangan untuk ' + r.nama);
+    act.append(bWa, bCopy, bView);
+
+    li.append(info, act); ul.appendChild(li);
   });
-  $('#jml').textContent = rows.length;
-  $('#hasil').classList.toggle('hidden', rows.length === 0);
 }
 
-$('#btnBuat').onclick = ()=>{
-  const msg = $('#msg'); msg.textContent = '';
-  let base = $('#base').value.trim();
-  if (!/^https?:\/\//i.test(base)) { msg.textContent = 'Isi alamat web undangan yang diawali http:// atau https://'; $('#base').focus(); return; }
-  base = base.split('#')[0];
-  const names = $('#names').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-  if (!names.length) { msg.textContent = 'Tulis minimal satu nama tamu.'; $('#names').focus(); return; }
-  save(K.base, base); save(K.names, $('#names').value); save(K.tpl, $('#tpl').value);
-  rows = names.map(n => ({nama:n, link:makeLink(base, n)}));
-  render(); $('#hasil').scrollIntoView({behavior:'smooth', block:'start'});
-};
-$('#btnKosong').onclick = ()=>{ $('#names').value=''; save(K.names,''); rows=[]; render(); $('#msg').textContent=''; };
-$('#btnTplReset').onclick = ()=>{ $('#tpl').value = DEF_TPL; save(K.tpl, DEF_TPL); };
-$('#tpl').addEventListener('change', ()=>save(K.tpl, $('#tpl').value));
-$('#btnSalinSemua').onclick = async e=>{
-  const ok = await salin(rows.map(r=>r.nama+'\n'+r.link).join('\n\n'));
-  flash(e.target, ok ? 'Tersalin ✓' : 'Gagal');
-};
-$('#btnCsv').onclick = ()=>{
-  const q = v => '"'+String(v).replace(/"/g,'""')+'"';
-  const csv = '\ufeffNo,Nama,Link\r\n' + rows.map((r,i)=>[i+1,q(r.nama),q(r.link)].join(',')).join('\r\n');
+// simpan + render saat mengetik
+let tmr;
+$('#names').addEventListener('input', () => { clearTimeout(tmr); tmr = setTimeout(() => { save(K.names, $('#names').value); render(); }, 120); });
+
+// pengaturan
+const dlg = $('#dlg');
+const openSet = () => { dlg.showModal(); };
+$('#btnSet').onclick = openSet; $('#openSet2').onclick = openSet;
+$('#dlgX').onclick = $('#dlgDone').onclick = () => dlg.close();
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+$('#base').addEventListener('input', () => { const v = $('#base').value.trim(); if (validBase(v)) save(K.base, v); render(); });
+$('#tpl').addEventListener('input', () => save(K.tpl, $('#tpl').value));
+$('#btnTplReset').onclick = () => { $('#tpl').value = DEF_TPL; save(K.tpl, DEF_TPL); toast('Pesan dikembalikan'); };
+$('#btnClearSent').onclick = () => { if (confirm('Hapus semua tanda terkirim?')) { sent.clear(); saveSent(); render(); toast('Tanda terkirim dihapus'); } };
+$('#btnClearNames').onclick = () => { if (confirm('Hapus semua nama tamu?')) { $('#names').value = ''; save(K.names, ''); render(); dlg.close(); } };
+
+// aksi massal
+$('#btnSalinSemua').onclick = async () => toast((await salin(rows.map(r => r.nama + '\n' + r.link).join('\n\n'))) ? rows.length + ' link disalin' : 'Gagal menyalin');
+$('#btnCsv').onclick = () => {
+  const q = v => '"' + String(v).replace(/"/g, '""') + '"';
+  const csv = '\ufeffNo,Nama,Link,Status\r\n' + rows.map((r, i) => [i + 1, q(r.nama), q(r.link), sent.has(r.key) ? 'Terkirim' : 'Belum'].join(',')).join('\r\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
   a.download = 'link-undangan-tamu.csv'; document.body.appendChild(a); a.click(); a.remove();
 };
+
+// awal
+$('#base').value = load(K.base) || DEF_BASE;
+$('#tpl').value = load(K.tpl) || DEF_TPL;
+$('#names').value = load(K.names) || '';
+render();
 </script>
 </body>
 </html>
