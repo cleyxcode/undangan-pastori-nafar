@@ -115,7 +115,7 @@
 const $ = s => document.querySelector(s);
 const K = {base:'gpm_base', names:'gpm_names', tpl:'gpm_tpl', sent:'gpm_sent'};
 const DEF_BASE = 'https://undangan-pastori-nafar.vercel.app/';
-const DEF_TPL = "Salam sejahtera,\n\nKepada Yth. {nama}\n\nDengan sukacita kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri Penthabisan dan Peresmian Pastori Baru Jemaat GPM Nafar pada hari Minggu, 15 November 2026.\n\nBuka undangan digital di sini:\n{link}\n\nAtas kehadirannya kami sampaikan terima kasih dan teriring doa Tuhan Yesus memberkati.";
+const DEF_TPL = "Salam sejahtera,\n\nKepada Yth. {nama}\n\nDengan sukacita kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri Penahbisan dan Peresmian Pastori Baru Jemaat GPM Nafar pada hari Minggu, 15 November 2026.\n\nBuka undangan digital di sini:\n{link}\n\nAtas kehadirannya kami sampaikan terima kasih dan teriring doa Tuhan Yesus memberkati.";
 const MAXNAME = 90;
 const load = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
 const save = (k,v) => { try { localStorage.setItem(k,v); } catch(e){} };
@@ -186,7 +186,7 @@ function coverEl(name, i, total, dim){
     (total > 1 ? '<span class="absolute right-4 top-3.5 text-[11px] font-semibold text-[#fff3b0]/70">'+(i+1)+' / '+total+'</span>' : '') +
     '<p class="f-cin text-center text-[9px] sm:text-[10px] tracking-[.22em] leading-[1.9] opacity-90">GEREJA PROTESTAN MALUKU<br>JEMAAT GPM NAFAR</p>' +
     '<p class="f-cin mt-6 text-xl sm:text-2xl tracking-[.3em]">UNDANGAN</p>' +
-    '<p class="f-serif italic font-semibold text-[17px] sm:text-lg leading-tight mt-1">Penthabisan dan Peresmian Pastori Baru</p>' +
+    '<p class="f-serif italic font-semibold text-[17px] sm:text-lg leading-tight mt-1">Penahbisan dan Peresmian Pastori Baru</p>' +
     '<p class="f-serif font-bold text-[15px] mt-5 leading-snug">Kepada Yth.<br>Bapak/Ibu/Saudara/i :</p>' +
     '<div class="nm f-serif mt-2 inline-block max-w-full break-words border border-[#d9c45e] bg-[#fffdf3] px-3 py-1.5 text-xl font-bold text-[#2a2108]" style="overflow-wrap:anywhere"></div>';
   const nm = d.querySelector('.nm'); nm.textContent = name; if (dim) nm.style.opacity = '.55';
